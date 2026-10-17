@@ -1,0 +1,392 @@
+{
+  "info": {
+    "name": "IoT Dashboard API",
+    "description": "REST API cho hệ thống IoT Dashboard - Quản lý thiết bị, cảm biến, lịch sử điều khiển.\n\nBase URL: http://localhost:8080\nSwagger UI: http://localhost:8080/swagger-ui.html",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "👤 User",
+      "description": "Quản lý người dùng - Đăng nhập, Đăng ký, Thông tin cá nhân",
+      "item": [
+        {
+          "name": "Đăng nhập",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"hoangmaianh@example.com\",\n  \"password\": \"hashed_password_here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "login"]
+            },
+            "description": "Đăng nhập bằng email hoặc mã sinh viên + mật khẩu"
+          }
+        },
+        {
+          "name": "Đăng ký tài khoản",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Nguyễn Văn A\",\n  \"username\": \"B23DCCN001\",\n  \"email\": \"nguyenvana@example.com\",\n  \"password\": \"mypassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "register"]
+            },
+            "description": "Tạo tài khoản mới"
+          }
+        },
+        {
+          "name": "Lấy user theo ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "1"]
+            },
+            "description": "Lấy thông tin user theo ID"
+          }
+        },
+        {
+          "name": "Lấy user theo Mã sinh viên",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/student/B23DCCN332",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "student", "B23DCCN332"]
+            },
+            "description": "Tìm user theo mã sinh viên"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔌 Device",
+      "description": "Quản lý thiết bị - Xem danh sách, Điều khiển bật/tắt (UC02)",
+      "item": [
+        {
+          "name": "Lấy tất cả thiết bị",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices"]
+            },
+            "description": "Trả về tất cả thiết bị (SENSOR + ACTUATOR)"
+          }
+        },
+        {
+          "name": "Lấy danh sách Actuators",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/actuators",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "actuators"]
+            },
+            "description": "Chỉ lấy các thiết bị loại ACTUATOR"
+          }
+        },
+        {
+          "name": "Lấy thiết bị theo ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "1"]
+            },
+            "description": "Lấy chi tiết 1 thiết bị"
+          }
+        },
+        {
+          "name": "Bật thiết bị (ON)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"ON\",\n  \"username\": \"Mai Anh Hoàng\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/1/control",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "1", "control"]
+            },
+            "description": "UC02 - Bật thiết bị ID=1 (Đèn LED)"
+          }
+        },
+        {
+          "name": "Tắt thiết bị (OFF)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"OFF\",\n  \"username\": \"Mai Anh Hoàng\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/1/control",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "1", "control"]
+            },
+            "description": "UC02 - Tắt thiết bị ID=1"
+          }
+        },
+        {
+          "name": "Điều khiển TẤT CẢ thiết bị",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"ON\",\n  \"username\": \"Mai Anh Hoàng\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/0/control",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "0", "control"]
+            },
+            "description": "UC02 - Điều khiển tất cả thiết bị (ID=0)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 DataSensor",
+      "description": "Dữ liệu cảm biến - Dashboard realtime (UC01), Tìm kiếm & Lọc (UC03)",
+      "item": [
+        {
+          "name": "Lấy 15 bản ghi gần nhất (UC01)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/datasensor/latest",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "datasensor", "latest"]
+            },
+            "description": "UC01 - 15 bản ghi cảm biến mới nhất cho Dashboard chart"
+          }
+        },
+        {
+          "name": "Tìm kiếm dữ liệu (UC03) - Tất cả",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/datasensor?page=0&size=10&sortBy=time&sortDir=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "datasensor"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" },
+                { "key": "sortBy", "value": "time" },
+                { "key": "sortDir", "value": "desc" }
+              ]
+            },
+            "description": "UC03 - Lấy tất cả dữ liệu cảm biến (phân trang)"
+          }
+        },
+        {
+          "name": "Tìm kiếm dữ liệu - Lọc theo Nhiệt độ",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/datasensor?sensorType=Nhiệt độ&page=0&size=10&sortBy=time&sortDir=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "datasensor"],
+              "query": [
+                { "key": "sensorType", "value": "Nhiệt độ" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" },
+                { "key": "sortBy", "value": "time" },
+                { "key": "sortDir", "value": "desc" }
+              ]
+            },
+            "description": "UC03 - Lọc dữ liệu theo loại Nhiệt độ"
+          }
+        },
+        {
+          "name": "Tìm kiếm dữ liệu - Lọc theo Độ ẩm",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/datasensor?sensorType=Độ ẩm&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "datasensor"],
+              "query": [
+                { "key": "sensorType", "value": "Độ ẩm" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "description": "UC03 - Lọc dữ liệu theo loại Độ ẩm"
+          }
+        },
+        {
+          "name": "Tìm kiếm dữ liệu - Lọc theo Ánh sáng",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/datasensor?sensorType=Ánh sáng&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "datasensor"],
+              "query": [
+                { "key": "sensorType", "value": "Ánh sáng" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "description": "UC03 - Lọc dữ liệu theo loại Ánh sáng"
+          }
+        },
+        {
+          "name": "Tìm kiếm dữ liệu - Lọc theo thời gian",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/datasensor?startTime=2024-01-01T00:00:00&endTime=2024-12-31T23:59:59&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "datasensor"],
+              "query": [
+                { "key": "startTime", "value": "2024-01-01T00:00:00" },
+                { "key": "endTime", "value": "2024-12-31T23:59:59" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "description": "UC03 - Lọc dữ liệu theo khoảng thời gian"
+          }
+        },
+        {
+          "name": "Danh sách tất cả cảm biến",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/datasensor/sensors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "datasensor", "sensors"]
+            },
+            "description": "Lấy danh sách tất cả module cảm biến"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📜 History",
+      "description": "Lịch sử điều khiển - Tra cứu thao tác (UC05), Trạng thái cuối (UC04)",
+      "item": [
+        {
+          "name": "Tra cứu lịch sử (UC05) - Tất cả",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/history?page=0&size=10&sortBy=time&sortDir=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" },
+                { "key": "sortBy", "value": "time" },
+                { "key": "sortDir", "value": "desc" }
+              ]
+            },
+            "description": "UC05 - Lấy tất cả lịch sử điều khiển"
+          }
+        },
+        {
+          "name": "Tra cứu lịch sử - Lọc theo thiết bị",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/history?deviceId=1&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history"],
+              "query": [
+                { "key": "deviceId", "value": "1" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "description": "UC05 - Lọc lịch sử theo thiết bị ID=1"
+          }
+        },
+        {
+          "name": "Tra cứu lịch sử - Lọc theo action ON",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/history?action=ON&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history"],
+              "query": [
+                { "key": "action", "value": "ON" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "description": "UC05 - Lọc lịch sử chỉ hành động ON"
+          }
+        },
+        {
+          "name": "Tra cứu lịch sử - Lọc kết hợp",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/history?deviceId=1&action=ON&startTime=2024-01-01T00:00:00&endTime=2024-12-31T23:59:59&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history"],
+              "query": [
+                { "key": "deviceId", "value": "1" },
+                { "key": "action", "value": "ON" },
+                { "key": "startTime", "value": "2024-01-01T00:00:00" },
+                { "key": "endTime", "value": "2024-12-31T23:59:59" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "description": "UC05 - Lọc kết hợp: thiết bị + action + thời gian"
+          }
+        },
+        {
+          "name": "Trạng thái cuối thiết bị (UC04)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/history/latest/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history", "latest", "1"]
+            },
+            "description": "UC04 - Lấy bản ghi lịch sử gần nhất của thiết bị để đồng bộ trạng thái"
+          }
+        }
+      ]
+    }
+  ]
+}
