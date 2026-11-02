@@ -28,12 +28,11 @@ public interface DataSensorRepository extends JpaRepository<DataSensor, Integer>
     @Query("SELECT d FROM DataSensor d ORDER BY d.time DESC")
     Page<DataSensor> findAllOrderByTimeDesc(Pageable pageable);
 
-    // Tìm kiếm kết hợp: loại cảm biến + khoảng thời gian
+    // Tìm kiếm kết hợp: loại cảm biến + khoảng thời gian (sắp xếp động theo Pageable)
     @Query("SELECT d FROM DataSensor d WHERE " +
            "(:sensorType IS NULL OR d.sensor.sensorType = :sensorType) AND " +
            "(:startTime IS NULL OR d.time >= :startTime) AND " +
-           "(:endTime IS NULL OR d.time <= :endTime) " +
-           "ORDER BY d.time DESC")
+           "(:endTime IS NULL OR d.time <= :endTime)")
     Page<DataSensor> searchData(
             @Param("sensorType") String sensorType,
             @Param("startTime") LocalDateTime startTime,

@@ -69,7 +69,8 @@ public class DataSeeder implements ApplicationRunner {
         if (deviceRepository.count() == 0) {
             deviceRepository.save(Device.builder().name("LED 1").type("ACTUATOR").isActive(false).build());
             deviceRepository.save(Device.builder().name("LED 2").type("ACTUATOR").isActive(false).build());
-            log.info("✅ Seeded 2 devices (LED 1, LED 2)");
+            deviceRepository.save(Device.builder().name("LED 3").type("ACTUATOR").isActive(false).build());
+            log.info("✅ Seeded 3 devices (LED 1, LED 2, LED 3)");
         }
 
         // Delete Workstation Laptop directly from DB to clean up previous seeds

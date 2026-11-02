@@ -33,11 +33,11 @@ public class MqttSubscriber implements MqttCallback {
     @Value("${mqtt.topic.ack:device/status}")
     private String ackTopic;
 
-    // Pattern để parse format ESP32: "[HH:MM:SS] ---> Nhiet do: 26.50, Do am: 75.00, Anh sang: 450"
+    // Pattern để parse format ESP32: "[HH:MM:SS] ---> Nhiet do: 26.50, Do am:
+    // 75.00, Anh sang: 450"
     private static final Pattern ESP_SENSOR_PATTERN = Pattern.compile(
             "Nhiet do:\\s*([\\d.]+).*Do am:\\s*([\\d.]+).*Anh sang:\\s*(\\d+)",
-            Pattern.CASE_INSENSITIVE
-    );
+            Pattern.CASE_INSENSITIVE);
 
     public MqttSubscriber(DataSensorService dataSensorService) {
         this.dataSensorService = dataSensorService;
@@ -88,7 +88,8 @@ public class MqttSubscriber implements MqttCallback {
     /**
      * Xử lý dữ liệu cảm biến từ ESP32
      * Hỗ trợ 2 format:
-     * 1. Plain text từ ESP: "[HH:MM:SS] ---> Nhiet do: 26.50, Do am: 75.00, Anh sang: 450"
+     * 1. Plain text từ ESP: "[HH:MM:SS] ---> Nhiet do: 26.50, Do am: 75.00, Anh
+     * sang: 450"
      * 2. JSON: {"temperature": 26.5, "humidity": 75.0, "light": 450}
      */
     private void handleSensorData(String payload) {
@@ -128,6 +129,7 @@ public class MqttSubscriber implements MqttCallback {
     /**
      * Xử lý xác nhận trạng thái từ ESP32
      * Format: "[HH:MM:SS] ---> DEN 1 DA BAT" hoặc "[HH:MM:SS] ---> DEN 2 DA TAT"
+     * hoặc "[HH:MM:SS] ---> DEN 3 DA BAT/TAT"
      */
     private void handleDeviceAck(String payload) {
         log.info("✅ Device acknowledgment: {}", payload);

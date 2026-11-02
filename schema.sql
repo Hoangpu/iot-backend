@@ -61,7 +61,8 @@ VALUES (1, 'Mai Anh Hoàng', 'B23DCCN332', 'D23CQCN', 'hoangmaianh@example.com',
 -- Thêm các thiết bị ngoại vi (Actuators)
 INSERT IGNORE INTO devices (id, name, type, is_active) VALUES
 (1, 'Đèn LED 1 (Phòng Khách)', 'ACTUATOR', FALSE),
-(2, 'Quạt thông gió', 'ACTUATOR', FALSE);
+(2, 'Quạt thông gió', 'ACTUATOR', FALSE),
+(3, 'Đèn LED 3', 'ACTUATOR', FALSE);
 
 -- Thêm các module cảm biến (Sensors)
 INSERT IGNORE INTO sensors (id, name, sensor_type, is_active) VALUES

@@ -20,10 +20,11 @@ public class MqttPublisher {
     /**
      * Publish lệnh điều khiển xuống ESP32
      * Topic: device/control
-     * ESP32 nhận plain text: "ON", "OFF" cho LED 1; "ON2", "OFF2" cho LED 2
+     * ESP32 nhận plain text: "ON", "OFF" cho LED 1; "ON2", "OFF2" cho LED 2; "ON3", "OFF3" cho LED 3
      * 
      * deviceId = 1 → LED 1 → "ON"/"OFF"
      * deviceId = 2 → LED 2 → "ON2"/"OFF2"
+     * deviceId = 3 → LED 3 → "ON3"/"OFF3"
      * deviceId đặc biệt → ALL_ON/ALL_OFF (nếu cần)
      */
     public boolean publishControl(Integer deviceId, String action) {
@@ -53,6 +54,7 @@ public class MqttPublisher {
      * Map deviceId và action sang lệnh ESP32
      * LED 1 (id=1): ON/OFF
      * LED 2 (id=2): ON2/OFF2
+     * LED 3 (id=3): ON3/OFF3
      * Các device khác: không gửi MQTT (chỉ lưu DB)
      */
     private String mapToEspCommand(Integer deviceId, String action) {
@@ -62,6 +64,7 @@ public class MqttPublisher {
             case 0 -> isOn ? "ALL_ON" : "ALL_OFF";
             case 1 -> isOn ? "ON" : "OFF";
             case 2 -> isOn ? "ON2" : "OFF2";
+            case 3 -> isOn ? "ON3" : "OFF3";
             default -> {
                 log.info("Device {} is not a hardware device, skipping MQTT", deviceId);
                 yield action; // Gửi nguyên action cho các device khác

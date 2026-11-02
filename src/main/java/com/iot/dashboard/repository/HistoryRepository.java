@@ -21,13 +21,12 @@ public interface HistoryRepository extends JpaRepository<History, Integer> {
     @Query("SELECT h FROM History h WHERE h.device.id = :deviceId ORDER BY h.time DESC")
     Page<History> findByDeviceId(@Param("deviceId") Integer deviceId, Pageable pageable);
 
-    // Tìm kiếm kết hợp
+    // Tìm kiếm kết hợp (sắp xếp động theo Pageable)
     @Query("SELECT h FROM History h WHERE " +
            "(:deviceId IS NULL OR h.device.id = :deviceId) AND " +
            "(:action IS NULL OR h.action = :action) AND " +
            "(:startTime IS NULL OR h.time >= :startTime) AND " +
-           "(:endTime IS NULL OR h.time <= :endTime) " +
-           "ORDER BY h.time DESC")
+           "(:endTime IS NULL OR h.time <= :endTime)")
     Page<History> searchHistory(
             @Param("deviceId") Integer deviceId,
             @Param("action") String action,
