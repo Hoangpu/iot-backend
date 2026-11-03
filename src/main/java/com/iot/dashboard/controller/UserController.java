@@ -1,8 +1,10 @@
 package com.iot.dashboard.controller;
 
 import com.iot.dashboard.dto.LoginRequest;
+import com.iot.dashboard.dto.LoginResponse;
 import com.iot.dashboard.dto.RegisterRequest;
 import com.iot.dashboard.entity.User;
+import com.iot.dashboard.security.JwtTokenProvider;
 import com.iot.dashboard.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -22,6 +26,24 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @Operation(summary = "Lấy thông tin user hiện tại qua Token", description = "Đọc username từ JWT Token và trả về thông tin cá nhân")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa xác thực hoặc token không hợp lệ")
+    })
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body("Chưa xác thực");
+        }
+        User user = userService.getUserByUsernameOrEmail(principal.getName());
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
+    }
 
     @Operation(summary = "Lấy thông tin user theo ID", description = "Trả về thông tin chi tiết của người dùng theo ID (password được ẩn)")
     @ApiResponses({
@@ -46,17 +68,23 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserByStudentId(studentId));
     }
 
-    @Operation(summary = "Đăng nhập", description = "Đăng nhập bằng email hoặc mã sinh viên + mật khẩu")
+    @Operation(summary = "Đăng nhập", description = "Đăng nhập bằng email hoặc mã sinh viên + mật khẩu, trả về JWT Token")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Đăng nhập thành công",
-                    content = @Content(schema = @Schema(implementation = User.class))),
+                    content = @Content(schema = @Schema(implementation = LoginResponse.class))),
             @ApiResponse(responseCode = "400", description = "Sai tài khoản hoặc mật khẩu")
     })
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             User user = userService.login(request.getUsername(), request.getPassword());
-            return ResponseEntity.ok(user);
+            String token = jwtTokenProvider.generateToken(user.getStudentId());
+            LoginResponse response = LoginResponse.builder()
+                    .token(token)
+                    .type("Bearer")
+                    .user(user)
+                    .build();
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -65,7 +93,7 @@ public class UserController {
     @Operation(summary = "Đăng ký tài khoản mới", description = "Tạo tài khoản mới với thông tin: họ tên, mã sinh viên, email, mật khẩu")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Đăng ký thành công",
-                    content = @Content(schema = @Schema(implementation = User.class))),
+                    content = @Content(schema = @Schema(implementation = LoginResponse.class))),
             @ApiResponse(responseCode = "400", description = "Email hoặc tài khoản đã tồn tại")
     })
     @PostMapping("/register")
@@ -77,7 +105,13 @@ public class UserController {
             data.put("email", request.getEmail());
             data.put("password", request.getPassword());
             User user = userService.register(data);
-            return ResponseEntity.ok(user);
+            String token = jwtTokenProvider.generateToken(user.getStudentId());
+            LoginResponse response = LoginResponse.builder()
+                    .token(token)
+                    .type("Bearer")
+                    .user(user)
+                    .build();
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

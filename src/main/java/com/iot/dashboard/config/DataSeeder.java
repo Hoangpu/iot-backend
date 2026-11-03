@@ -32,6 +32,7 @@ public class DataSeeder implements ApplicationRunner {
     private final DeviceRepository deviceRepository;
     private final DataSensorRepository dataSensorRepository;
     private final org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -43,16 +44,17 @@ public class DataSeeder implements ApplicationRunner {
     }
 
     private void seedUsers() {
-        if (userRepository.count() == 0) {
-            User user = User.builder()
-                    .name("Nguyen Van A")
-                    .studentId("B21DCCN001")
-                    .className("D21CNPM01")
-                    .email("nguyenvana@example.com")
-                    .password("$2a$10$dummyhashedpassword123456789")
+        if (userRepository.findByStudentId("admin").isEmpty()) {
+            User admin = User.builder()
+                    .name("Administrator")
+                    .studentId("admin")
+                    .className("ADMIN")
+                    .email("admin@iot.com")
+                    .password(passwordEncoder.encode("123456"))
+                    .avatar("https://api.dicebear.com/7.x/avataaars/svg?seed=Admin")
                     .build();
-            userRepository.save(user);
-            log.info("✅ Seeded default user: {}", user.getName());
+            userRepository.save(admin);
+            log.info("✅ Đã tạo tài khoản admin mặc định: tài khoản 'admin' / mật khẩu '123456'");
         }
     }
 
@@ -110,7 +112,7 @@ public class DataSeeder implements ApplicationRunner {
                         .sensor(lightSensor).value(BigDecimal.valueOf(lights[i])).time(time).build());
             }
 
-            log.info("✅ Seeded 15 sample sensor data records");
+            log.info("Seeded 15 sample sensor data records");
         }
     }
 }
